@@ -1,0 +1,8 @@
+# ignore IDE files
+.idea
+.vscode
+
+# ignore node_modules
+./publisher/node_modules
+# ignore node_modules
+./subscriber/node_modules
