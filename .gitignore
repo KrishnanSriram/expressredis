@@ -6,3 +6,7 @@
 ./publisher/node_modules
 # ignore node_modules
 ./subscriber/node_modules
+
+# image files
+./publisher/uploads
+./subscriber/images
