@@ -21,12 +21,30 @@ const storage = multer.diskStorage({
       cb(null, file.originalname)
     }
   })
-   
+
 const upload = multer({ storage: storage })
 
 app.get('/', (req, res) => {
     res.status(200).send({ 'message': 'Try another URI' });
-})
+});
+
+app.get('/data', async (req, res) => {
+    let data = [];
+    await publisher.keys('*', (err, keys) => {
+        Promise.all(keys.map(key => client.getAsync(key)))
+            .then(values => {
+                data = values;
+                const finalResponse = {
+                    count: data.length,
+                    data,
+                };
+                res.status(200).json(finalResponse);
+        })
+            .catch(err => {
+                res.status(500).json(err);
+            })
+    });
+});
 
 app.post('/', async (req, res) => {
     const data = req.body;
@@ -62,7 +80,7 @@ app.post('/image', upload.single('image'), async (req, res, next) => {
         res.status(200).send({ message: 'Item added to Reddis server, check with subscribed endpoint' });
     });
     // res.status(201).send({ message: 'Your file is uploaded for processing!' });
-    
+
 });
 
 app.listen(process.env.PORT, () => {
